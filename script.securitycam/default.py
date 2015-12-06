@@ -21,6 +21,7 @@ username  = __addon__.getSetting('username')
 password  = __addon__.getSetting('password')
 width     = int(float(__addon__.getSetting('width')))
 height    = int(float(__addon__.getSetting('height')))
+offset    = int(float(__addon__.getSetting('offset')))
 interval  = int(float(__addon__.getSetting('interval')))
 autoClose = (__addon__.getSetting('autoClose') == 'true')
 duration  = int(float(__addon__.getSetting('duration')) * 1000)
@@ -38,15 +39,16 @@ class CamPreviewDialog(xbmcgui.WindowDialog):
         COORD_GRID_HEIGHT = 720
         scaledWidth = int(float(COORD_GRID_WIDTH) / self.getWidth() * width)
         scaledHeight = int(float(COORD_GRID_HEIGHT) / self.getHeight() * height)
-        self.image = xbmcgui.ControlImage(COORD_GRID_WIDTH - scaledWidth, COORD_GRID_HEIGHT - scaledHeight, scaledWidth, scaledHeight, __icon__)
+        self.image = xbmcgui.ControlImage(COORD_GRID_WIDTH - scaledWidth - offset, COORD_GRID_HEIGHT - scaledHeight - offset, scaledWidth, scaledHeight, __icon__)
         self.addControl(self.image)
-        self.image.setAnimations([('WindowOpen', 'effect=slide start=%d time=1000 tween=cubic easing=in'%(scaledWidth),), ('WindowClose', 'effect=slide end=%d time=1000 tween=cubic easing=in'%(scaledWidth),)])
+        self.image.setAnimations([('WindowOpen', 'effect=slide start=%d time=1000 tween=cubic easing=in'%(scaledWidth + offset),), ('WindowClose', 'effect=slide end=%d time=1000 tween=cubic easing=in'%(scaledWidth + offset),)])
 
     def start(self, autoClose, duration, interval, url, destination):
         log('CamPreviewDialog Started \n', xbmc.LOGDEBUG)
         self.isRunning = bool(1)
         snapshot = ''
         startTime = time.time()
+        shown = False
         while(not autoClose or (time.time() - startTime) * 1000 <= duration):
             if xbmcvfs.exists(snapshot):
                 os.remove(snapshot)
@@ -55,6 +57,10 @@ class CamPreviewDialog(xbmcgui.WindowDialog):
 
             if snapshot != '':
                 self.update(snapshot)
+
+            if not shown:
+                self.show()
+                shown = True
 
             xbmc.sleep(interval)
             if not self.isRunning:
@@ -97,7 +103,7 @@ log('Original URL: [' + url + ']\n', xbmc.LOGDEBUG)
 if (username is not None and username != ''):
     passwordManager = urllib2.HTTPPasswordMgrWithDefaultRealm()
     passwordManager.add_password(None, url, username, password)
-    authhandler = urllib2.HTTPBasicAuthHandler(passwordManager)
+    authhandler = urllib2.HTTPDigestAuthHandler(passwordManager)
     opener = urllib2.build_opener(authhandler)
     urllib2.install_opener(opener)
 
@@ -113,7 +119,6 @@ log('Final URL: [' + url + ']\n', xbmc.LOGDEBUG)
 xbmcvfs.mkdir(__snapshot_dir__)
 
 camPreview = CamPreviewDialog()
-camPreview.show()
 camPreview.start(autoClose, duration, interval, url, __snapshot_dir__)
 del camPreview
 

@@ -1,3 +1,8 @@
+v0.2.0
+- Tweaked to work with TRENTnet cameras
+- Grab an image before revealing overlay
+- Added an "offset" setting allowing image to be offset from the screen edges
+
 v0.0.9
 - Change image update method to prevent caching (should eliminate issue some users were seeing where image didn't update properly)
 - Eliminate dependency on urllib (now uses urllib2 exclusively)
