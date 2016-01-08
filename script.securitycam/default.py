@@ -16,15 +16,18 @@ __resource__ = xbmc.translatePath(os.path.join(__cwd__, 'resources').encode("utf
 __snapshot_dir__ = xbmc.translatePath(os.path.join(__profile__, 'snapshots').encode("utf-8")).decode("utf-8")
 
 # Get settings
-url       = __addon__.getSetting('url')
-username  = __addon__.getSetting('username')
-password  = __addon__.getSetting('password')
-width     = int(float(__addon__.getSetting('width')))
-height    = int(float(__addon__.getSetting('height')))
-offset    = int(float(__addon__.getSetting('offset')))
-interval  = int(float(__addon__.getSetting('interval')))
-autoClose = (__addon__.getSetting('autoClose') == 'true')
-duration  = int(float(__addon__.getSetting('duration')) * 1000)
+url        = __addon__.getSetting('url')
+username   = __addon__.getSetting('username')
+password   = __addon__.getSetting('password')
+authtype   = __addon__.getSetting('authtype')
+width      = int(float(__addon__.getSetting('width')))
+height     = int(float(__addon__.getSetting('height')))
+xoffset    = int(float(__addon__.getSetting('xoffset')))
+yoffset    = int(float(__addon__.getSetting('yoffset')))
+interval   = int(float(__addon__.getSetting('interval')))
+autoclose  = (__addon__.getSetting('autoclose') == 'true')
+duration   = int(float(__addon__.getSetting('duration')) * 1000)
+slidespeed = int(float(__addon__.getSetting('slidespeed')))
 
 # Utils
 
@@ -39,17 +42,17 @@ class CamPreviewDialog(xbmcgui.WindowDialog):
         COORD_GRID_HEIGHT = 720
         scaledWidth = int(float(COORD_GRID_WIDTH) / self.getWidth() * width)
         scaledHeight = int(float(COORD_GRID_HEIGHT) / self.getHeight() * height)
-        self.image = xbmcgui.ControlImage(COORD_GRID_WIDTH - scaledWidth - offset, COORD_GRID_HEIGHT - scaledHeight - offset, scaledWidth, scaledHeight, __icon__)
+        self.image = xbmcgui.ControlImage(COORD_GRID_WIDTH - scaledWidth - xoffset, COORD_GRID_HEIGHT - scaledHeight - yoffset, scaledWidth, scaledHeight, __icon__)
         self.addControl(self.image)
-        self.image.setAnimations([('WindowOpen', 'effect=slide start=%d time=1000 tween=cubic easing=in'%(scaledWidth + offset),), ('WindowClose', 'effect=slide end=%d time=1000 tween=cubic easing=in'%(scaledWidth + offset),)])
+        self.image.setAnimations([('WindowOpen', 'effect=slide start=%(start)d time=%(time)d tween=cubic easing=in' % {'start': scaledWidth + xoffset,'time': slidespeed}),('WindowClose', 'effect=slide end=%(end)d time=%(time)d tween=cubic easing=in' % {'end': scaledWidth + xoffset,'time': slidespeed})])
 
-    def start(self, autoClose, duration, interval, url, destination):
+    def start(self, autoclose, duration, interval, url, destination):
         log('CamPreviewDialog Started \n', xbmc.LOGDEBUG)
         self.isRunning = bool(1)
         snapshot = ''
         startTime = time.time()
         shown = False
-        while(not autoClose or (time.time() - startTime) * 1000 <= duration):
+        while(not autoclose or (time.time() - startTime) * 1000 <= duration):
             if xbmcvfs.exists(snapshot):
                 os.remove(snapshot)
 
@@ -89,10 +92,10 @@ class CamPreviewDialog(xbmcgui.WindowDialog):
     def update(self, image):
         log('Updating Image \n', xbmc.LOGDEBUG)
         self.image.setImage(image, bool(0))
-    
+
 # Main execution
 
-log('AutoClose: [' + str(autoClose) + ']\n', xbmc.LOGDEBUG)
+log('Autoclose: [' + str(autoclose) + ']\n', xbmc.LOGDEBUG)
 log('Duration: [' + str(duration) + ']\n', xbmc.LOGDEBUG)
 log('Interval: [' + str(interval) + ']\n', xbmc.LOGDEBUG)
 log('Width: [' + str(width) + ']\n', xbmc.LOGDEBUG)
@@ -103,7 +106,8 @@ log('Original URL: [' + url + ']\n', xbmc.LOGDEBUG)
 if (username is not None and username != ''):
     passwordManager = urllib2.HTTPPasswordMgrWithDefaultRealm()
     passwordManager.add_password(None, url, username, password)
-    authhandler = urllib2.HTTPDigestAuthHandler(passwordManager)
+    if authtype == 'Basic': authhandler = urllib2.HTTPBasicAuthHandler(passwordManager)
+    if authtype == 'Digest': authhandler = urllib2.HTTPDigestAuthHandler(passwordManager)
     opener = urllib2.build_opener(authhandler)
     urllib2.install_opener(opener)
 
@@ -119,11 +123,10 @@ log('Final URL: [' + url + ']\n', xbmc.LOGDEBUG)
 xbmcvfs.mkdir(__snapshot_dir__)
 
 camPreview = CamPreviewDialog()
-camPreview.start(autoClose, duration, interval, url, __snapshot_dir__)
+camPreview.start(autoclose, duration, interval, url, __snapshot_dir__)
 del camPreview
 
 dirs, files = xbmcvfs.listdir(__snapshot_dir__)
 for file in files:
     log('Delete remaining snapshot: [' + file + ']\n', xbmc.LOGDEBUG)
     xbmcvfs.delete(os.path.join(__snapshot_dir__, file))
-
