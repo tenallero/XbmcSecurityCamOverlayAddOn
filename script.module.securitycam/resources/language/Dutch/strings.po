@@ -1,0 +1,70 @@
+# XBMC Media Center language file
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2016-01-09 12:41+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgctxt "#32000"
+msgid "Camera"
+msgstr "Camera"
+
+msgctxt "#32001"
+msgid "Image Url:"
+msgstr "Beeld URL:"
+
+msgctxt "#32002"
+msgid "Username:"
+msgstr "Gebruikersnaam:"
+
+msgctxt "#32003"
+msgid "Password:"
+msgstr "Wachtwoord:"
+
+msgctxt "#32004"
+msgid "Authentication type:"
+msgstr "Authenticatie methode:"
+
+msgctxt "#33000"
+msgid "Behavior"
+msgstr "Gedrag"
+
+msgctxt "#33001"
+msgid "Window Width:"
+msgstr "Scherm breedte:"
+
+msgctxt "#33002"
+msgid "Window Height:"
+msgstr "Scherm hoogte:"
+
+msgctxt "#33003"
+msgid "Window Horizontal Offset:"
+msgstr "Horizontale offset:"
+
+msgctxt "#33004"
+msgid "Window Vertical Offset:"
+msgstr "Verticale offset:"
+
+msgctxt "#33005"
+msgid "Refresh Interval (in milliseconds):"
+msgstr "Vernieuwingsinterval (in milliseconden):"
+
+msgctxt "#33006"
+msgid "Animation Speed (in milliseconds):"
+msgstr "Animatiesnelheid (in milliseconden):"
+
+msgctxt "#33007"
+msgid "Enable auto-close after duration:"
+msgstr "Automatisch sluiten na bepaalde tijd:"
+
+msgctxt "#33008"
+msgid "Duration (in seconds):"
+msgstr "Tijdsduur (in seconden):"
