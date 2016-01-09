@@ -1,3 +1,8 @@
+v0.2.2 (2016-01-09)
+- Renamed script to match Kodi standards
+- Added Dutch language
+- Converted old language strings to new standard
+
 v0.2.1 (2016-01-08)
 - Added option to select basic or digest authentication to provide compatibility for more cameras
 - Added offset for both horizontal and vertical axes from screen edge
