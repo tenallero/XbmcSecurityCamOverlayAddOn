@@ -1,11 +1,11 @@
 # Import the modules
-import os, time, urllib2, xbmc, xbmcaddon, xbmcgui, xbmcvfs
+import os, time, urllib2, xbmc, xbmcaddon, xbmcgui, xbmcvfs, tempfile
 
 # Constants
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACKSPACE = 110
 ACTION_NAV_BACK = 92
-ADD_ON_ID = 'script.securitycam'
+ADD_ON_ID = 'script.module.securitycam'
 
 # Set plugin variables
 __addon__    = xbmcaddon.Addon()
@@ -13,7 +13,8 @@ __cwd__      = __addon__.getAddonInfo('path').decode("utf-8")
 __icon__     = xbmc.translatePath(os.path.join(__cwd__, 'icon.png').encode("utf-8")).decode("utf-8")
 __profile__  = xbmc.translatePath(__addon__.getAddonInfo('profile')).decode("utf-8")
 __resource__ = xbmc.translatePath(os.path.join(__cwd__, 'resources').encode("utf-8")).decode("utf-8")
-__snapshot_dir__ = xbmc.translatePath(os.path.join(__profile__, 'snapshots').encode("utf-8")).decode("utf-8")
+#__snapshot_dir__ = xbmc.translatePath(os.path.join(__profile__, 'snapshots').encode("utf-8")).decode("utf-8")
+__snapshot_dir__ = tempfile.gettempdir()
 
 # Get settings
 url        = __addon__.getSetting('url')
