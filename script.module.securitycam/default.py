@@ -54,8 +54,8 @@ class CamPreviewDialog(xbmcgui.WindowDialog):
         startTime = time.time()
         shown = False
         while(not autoclose or (time.time() - startTime) * 1000 <= duration):
-            if xbmcvfs.exists(snapshot):
-                os.remove(snapshot)
+            #if xbmcvfs.exists(snapshot):
+            #    os.remove(snapshot)
 
             snapshot = self.downloadSnapshot(url, destination)
 
